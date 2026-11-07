@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111318"><title>C9 UZAIR · Social Prank Simulator</title>
+<style>
+:root{--bg:#fafafa;--ink:#171717;--muted:#737373;--line:#dbdbdb;--blue:#0095f6;--pink:#ff3b75;--card:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f4f5f7;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+button,input{font:inherit}button{cursor:pointer}.brand{font-size:12px;letter-spacing:2px;font-weight:900;color:#8b5cf6}
+#entry{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 20% 15%,#f5d8e8,transparent 35%),radial-gradient(circle at 85% 85%,#d8e7ff,transparent 35%),#f7f7fb}
+.entry-card{width:min(420px,100%);background:#fff;border:1px solid #e8e8ef;border-radius:24px;padding:30px;box-shadow:0 24px 70px #25254a18}
+.entry-card h1{font-size:28px;margin:12px 0 8px}.sub{color:#737373;line-height:1.55;font-size:14px}
+.field{display:flex;align-items:center;border:1px solid #d9d9e2;border-radius:12px;padding:0 13px;margin:22px 0 12px;background:#fff}
+.field span{color:#777;font-weight:700}.field input{width:100%;border:0;outline:0;padding:15px 8px;background:transparent}
+.primary{width:100%;border:0;border-radius:12px;padding:14px;background:linear-gradient(100deg,#833ab4,#e1306c,#f77737);color:white;font-weight:800}
+.disclaimer{font-size:11px;color:#858585;line-height:1.5;margin-top:17px}
+#loading{display:none;min-height:100vh;place-items:center;padding:24px;text-align:center;background:#fff}
+.loadbox{width:min(360px,100%)}.spinner{width:46px;height:46px;border:4px solid #eee;border-top-color:#c13584;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 22px}@keyframes spin{to{transform:rotate(360deg)}}
+.progress{height:5px;background:#eee;border-radius:20px;overflow:hidden;margin-top:18px}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#833ab4,#e1306c,#f77737);transition:width .4s}
+#app{display:none;min-height:100vh}.topbar{height:58px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(16px,calc((100vw - 935px)/2));position:sticky;top:0;z-index:5}
+.logo{font-family:Georgia,serif;font-size:24px;font-weight:700;letter-spacing:-1px}.top-actions{display:flex;gap:18px;font-size:22px}
+.shell{max-width:935px;margin:22px auto 90px;padding:0 16px}.notice{font-size:11px;text-align:center;color:#8b5cf6;background:#f1eaff;border:1px solid #e2d3ff;padding:8px;border-radius:9px;margin-bottom:16px}
+.screen{display:none}.screen.active{display:block}
+.feed{max-width:610px;margin:auto}.storybar{display:flex;gap:15px;overflow:auto;background:#fff;border:1px solid var(--line);padding:15px;border-radius:5px;margin-bottom:18px}
+.story{text-align:center;min-width:62px;font-size:11px;color:#555}.story img{width:54px;height:54px;border-radius:50%;object-fit:cover;padding:2px;border:2px solid #d62976}
+.post{background:#fff;border:1px solid var(--line);margin-bottom:18px}.posthead{display:flex;align-items:center;gap:10px;padding:12px}.mini{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#eee}.postimg{width:100%;aspect-ratio:1/1;object-fit:cover;background:linear-gradient(135deg,#f3d5e6,#dce9fa);display:grid;place-items:center;color:#777}.postimg img{width:100%;height:100%;object-fit:cover}.postbody{padding:12px}.posticons{font-size:23px;display:flex;gap:14px;margin-bottom:8px}.muted{color:var(--muted);font-size:13px}
+.profile-head{display:flex;gap:55px;align-items:center;padding:24px 8px 35px;border-bottom:1px solid var(--line)}.bigavatar{width:150px;height:150px;border-radius:50%;object-fit:cover;background:#eee}.profile-info{flex:1}.profile-line{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.profile-line h2{font-size:20px;font-weight:400;margin:0}.stats{display:flex;gap:35px;margin:22px 0}.stats b{font-weight:700}.bio{font-size:14px;line-height:1.5}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:4px}.tile{aspect-ratio:1;background:linear-gradient(135deg,#eee,#ddd);display:grid;place-items:center;color:#888;font-size:12px;overflow:hidden}.tile img{width:100%;height:100%;object-fit:cover}
+.searchbox{background:#efefef;border:0;border-radius:9px;padding:12px;width:100%;margin-bottom:18px}.search-placeholder{padding:25px;text-align:center;color:#777;background:#fff;border:1px solid var(--line)}
+.inbox{background:#fff;border:1px solid var(--line);min-height:360px;display:grid;place-items:center;text-align:center;padding:35px}.inbox-mark{font-size:48px}.prank{font-size:30px;font-weight:900;margin:8px 0;background:linear-gradient(90deg,#833ab4,#e1306c,#f77737);color:transparent;background-clip:text}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;height:58px;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;gap:min(12vw,90px);align-items:center;z-index:6}.navbtn{border:0;background:none;font-size:23px;padding:8px;color:#222}.navbtn.active{color:#c13584}
+.toast{position:fixed;bottom:75px;left:50%;transform:translateX(-50%);background:#222;color:white;padding:10px 15px;border-radius:20px;font-size:12px;display:none;z-index:10}
+@media(max-width:600px){.shell{margin-top:14px}.profile-head{gap:22px;padding:20px 0 25px}.bigavatar{width:86px;height:86px}.stats{gap:15px;font-size:13px}.profile-line h2{font-size:18px}.profile-head{align-items:flex-start}.topbar{height:54px}.logo{font-size:22px}}
+</style></head>
+<body>
+<section id="entry">
+ <div class="entry-card">
+  <div class="brand">C9 UZAIR PRESENTS</div>
+  <h1>Social Profile Simulator</h1>
+  <p class="sub">Enter a public Instagram username to launch the interactive prank experience.</p>
+  <form id="entryForm">
+   <div class="field"><span>@</span><input id="username" maxlength="30" autocomplete="off" autocapitalize="none" placeholder="instagram_username" required></div>
+   <button class="primary" type="submit">Continue →</button>
+  </form>
+  <p class="disclaimer">Independent parody simulator. Not Instagram, not an account login, and no Instagram credentials are requested. Only publicly available profile details may be displayed.</p>
+ </div>
+</section>
+<section id="loading">
+ <div class="loadbox"><div class="brand">C9 UZAIR</div><div class="spinner"></div><h2 id="loadTitle">Preparing experience…</h2><p class="sub" id="loadSub">Connecting to public profile data</p><div class="progress"><i id="progressBar"></i></div></div>
+</section>
+<section id="app">
+ <header class="topbar"><div class="logo">Social</div><div class="top-actions"><span>♡</span><span>＋</span></div></header>
+ <main class="shell">
+  <div class="notice">PARODY SIMULATOR · NOT AN OFFICIAL INSTAGRAM APP</div>
+  <section class="screen active" id="homeScreen">
+   <div class="feed">
+    <div class="storybar" id="stories"></div>
+    <article class="post"><div class="posthead"><img class="mini" id="homeAvatar" alt=""><b id="homeHandle">profile</b><span style="margin-left:auto">•••</span></div>
+     <div class="postimg">Public posts preview</div><div class="postbody"><div class="posticons">♡　◯　➤</div><b id="likes">Public profile</b><p class="muted">This is a visual simulator. Feed content is not copied from Instagram.</p></div>
+    </article>
+   </div>
+  </section>
+  <section class="screen" id="searchScreen"><div class="feed"><input class="searchbox" placeholder="Search" id="searchInput"><div class="search-placeholder">Search UI preview<br><small>Use Profile to view the username you entered.</small></div></div></section>
+  <section class="screen" id="inboxScreen"><div class="feed inbox"><div><div class="inbox-mark">💬</div><div class="prank">YOU'RE PRANKED!</div><p class="muted">This was a C9 UZAIR prank simulator.<br>No Instagram account was logged in.</p><button class="primary" onclick="showScreen('home')">Back to home</button></div></div></section>
+  <section class="screen" id="profileScreen">
+   <div class="profile-head"><img class="bigavatar" id="profileAvatar" alt="Public profile picture"><div class="profile-info">
+    <div class="profile-line"><h2 id="profileHandle">@username</h2><span id="verified"></span></div>
+    <div class="stats"><span><b id="postCount">—</b> posts</span><span><b id="followerCount">—</b> followers</span><span><b id="followingCount">—</b> following</span></div>
+    <div class="bio"><b id="displayName"></b><br><span id="bioText">Public profile preview</span></div>
+   </div></div>
+   <div class="grid" id="postGrid"><div class="tile">Posts preview</div><div class="tile">Posts preview</div><div class="tile">Posts preview</div></div>
+  </section>
+ </main>
+ <nav class="bottomnav">
+  <button class="navbtn active" data-screen="home" aria-label="Home">⌂</button>
+  <button class="navbtn" data-screen="search" aria-label="Search">⌕</button>
+  <button class="navbtn" data-screen="inbox" aria-label="Inbox">✉</button>
+  <button class="navbtn" data-screen="profile" aria-label="Profile">◎</button>
+ </nav>
+</section>
+<div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+let currentProfile=null;
+const fallbackAvatar='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="100%" height="100%" fill="#e8e8ee"/><circle cx="80" cy="60" r="28" fill="#b9bbc8"/><path d="M25 155c5-38 28-55 55-55s50 17 55 55" fill="#b9bbc8"/></svg>');
+function setAvatar(id,url){$(id).src=url||fallbackAvatar;$(id).onerror=()=>$(id).src=fallbackAvatar}
+function number(v){return v==null?'—':Number(v).toLocaleString()}
+function showScreen(name){
+ document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+ $(name+'Screen').classList.add('active');
+ document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));
+ if(name==='inbox') setTimeout(()=>toast('Prank reveal!'),250);
+}
+function toast(t){$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',1800)}
+document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showScreen(b.dataset.screen)));
+async function lookup(username){
+ const r=await fetch('/api/profile?username='+encodeURIComponent(username));
+ const j=await r.json(); if(!r.ok) throw new Error(j.error||'Could not load profile');
+ return j.profile;
+}
+$('entryForm').addEventListener('submit',async e=>{
+ e.preventDefault(); const u=$('username').value.trim().replace(/^@/,'');
+ if(!/^[A-Za-z0-9._]{1,30}$/.test(u)){alert('Enter a valid username.');return}
+ $('entry').style.display='none';$('loading').style.display='grid';
+ const steps=[['Checking username…','Validating the public handle',24],['Loading profile preview…','Requesting available public profile data',52],['Preparing interface…','Building the simulator screens',82],['Almost ready…','Finishing the experience',100]];
+ let i=0; const tick=()=>{const s=steps[Math.min(i,steps.length-1)];$('loadTitle').textContent=s[0];$('loadSub').textContent=s[1];$('progressBar').style.width=s[2]+'%';i++};
+ tick(); const timer=setInterval(tick,650);
+ try{
+  currentProfile=await lookup(u);
+  clearInterval(timer);tick();
+  const p=currentProfile;const handle=p.handle||u;
+  $('profileHandle').textContent='@'+handle;$('homeHandle').textContent=handle;
+  $('displayName').textContent=p.displayName||handle;$('bioText').textContent=p.bio||'No public bio available.';
+  $('followerCount').textContent=number(p.followers);$('followingCount').textContent=number(p.following);$('postCount').textContent=number(p.posts);
+  $('verified').textContent=p.verified?'✓':'';
+  setAvatar('profileAvatar',p.avatarUrl);setAvatar('homeAvatar',p.avatarUrl);
+  $('stories').innerHTML='';
+  for(let n=0;n<5;n++){const d=document.createElement('div');d.className='story';const img=document.createElement('img');img.src=p.avatarUrl||fallbackAvatar;const label=document.createElement('div');label.textContent=n===0?handle:'story';d.append(img,label);$('stories').append(d)}
+  $('loading').style.display='none';$('app').style.display='block';showScreen('home');
+ }catch(err){
+  clearInterval(timer);$('loading').style.display='none';$('entry').style.display='grid';toast(err.message);
+  alert(err.message);
+ }
+});
+</script>
+</body></html>
